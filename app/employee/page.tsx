@@ -1,15 +1,22 @@
 "use client"
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const Page = () => {
-    return (
-      <>
-        <title>Employee | Home</title>
-        <div>Employee page</div>
-        <button onClick={() => signOut()} >Signout</button>
-      </>
-    );
-  };
+  const { data: _, status } = useSession();
+  if (status === "unauthenticated" || status === "loading") {
+    redirect("/");
+  }
+  return (
+    <>
+      <title>Employee | Home</title>
+      <div>Employee page</div>
+      <button type="button" onClick={() => signOut()}>
+        Signout
+      </button>
+    </>
+  );
+};
   
   export default Page;
   

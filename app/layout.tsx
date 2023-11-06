@@ -3,8 +3,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import {SessionProvider} from "next-auth/react"
+import { Toaster } from "react-hot-toast";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -14,13 +15,21 @@ const inter = Inter({ subsets: ['latin'] })
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <SessionProvider>
-      <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          {children}
+          <Toaster
+            position="top-center"
+            containerStyle={{
+              top: 140,
+            }}
+          />
+        </body>
       </SessionProvider>
     </html>
-  )
+  );
 }
