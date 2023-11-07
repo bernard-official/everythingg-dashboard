@@ -9,7 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { getDataFromDB } from "@/services";
+import { useGlobalContext } from "@/context/store";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -18,6 +20,7 @@ export default function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const router = useRouter();
+  const { users, setUsers } = useGlobalContext();
   // const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,6 +42,10 @@ export default function UserAuthForm({
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
+    const refreshData = await getDataFromDB();
+    const data2 = await (await refreshData.json())["getAllUsers"];
+    console.log("data2", data2);
+
     const response = await signIn("credentials", {
       redirect: false,
       email: email,
@@ -51,13 +58,13 @@ export default function UserAuthForm({
       toast.error("☹️ User is unauthorized", { duration: 1000 });
     } else {
       toast.success("😊 User signed in successfully");
-      router.push("/admin");
+      router.push("/employee");
     }
   }
 
   const handleGithubAuth = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    signIn("github");
+    signIn("github", { callbackUrl: "/admin" });
   };
 
   return (
