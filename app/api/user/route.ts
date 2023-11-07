@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const getAllUsers = await User.find()
+    // console.log("getting users: ", getAllUsers)
     return new NextResponse(JSON.stringify({ getAllUsers }), { status: 200 })
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })

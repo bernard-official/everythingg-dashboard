@@ -2,7 +2,7 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getDataFromDB, getUserByEmailFromDB } from "@/services";
+import { User } from "@/types";
 
 const handler = NextAuth({
   providers: [
@@ -15,23 +15,14 @@ const handler = NextAuth({
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials as { email: string, password: string }
-        // console.log("details: ", email, password)
-        // console.log("req email: ", req?.body?.email as string)
-        // const getAll = await getDataFromDB()
-        // const checkUser = await getUserByEmailFromDB(email)
-        // console.log("checkUser: ", checkUser)
-        // console.log("all: ", getAll)
-        if (email !== "john@gmail.com" || password !== "1234") {
-          throw new Error("invalid credentials");
-        }
 
-        // if everything is fine
-        return {
-          id: "1234",
-          name: "John Doe",
-          email: "john@gmail.com",
-          role: "admin",
-        };
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user`)
+        const getAllUsers = await response.json()
+        const filterEmail = getAllUsers["getAllUsers"].filter((user: User) => user.email === email && user.password === password)[0]
+        if (filterEmail.length === 0) {
+          throw new Error("User not available");
+        }
+        return filterEmail
       },
 
     })

@@ -8,8 +8,6 @@ import {
   useState,
 } from "react";
 import { User } from "../types";
-import { allUsers } from "@/consts";
-import { getDataFromDB } from "@/services";
 
 interface ContextProps {
   users: User[];
@@ -26,6 +24,8 @@ export const GlobalContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  // const getAllUsers = await fetch(`${process.env.NEXTAUTH_URL}/api/user`);
+  // const data = await (await getAllUsers.json())["getAllUsers"];
   const [users, setUsers] = useState<User[]>([]);
   // useEffect(() => {
   //   async () => {

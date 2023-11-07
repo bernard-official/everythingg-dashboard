@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { redirect, useRouter } from "next/navigation";
 import { getDataFromDB } from "@/services";
 import { useGlobalContext } from "@/context/store";
+import { User } from "@/types";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -21,14 +22,8 @@ export default function UserAuthForm({
 }: UserAuthFormProps) {
   const router = useRouter();
   const { users, setUsers } = useGlobalContext();
-  // const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // const [userForm, setUserForm] = useState({
-  //   email: "",
-  //   password: "",
-  // });
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -42,10 +37,6 @@ export default function UserAuthForm({
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-    const refreshData = await getDataFromDB();
-    const data2 = await (await refreshData.json())["getAllUsers"];
-    console.log("data2", data2);
-
     const response = await signIn("credentials", {
       redirect: false,
       email: email,
@@ -54,9 +45,13 @@ export default function UserAuthForm({
     setEmail("");
     setPassword("");
     const data = response;
-    console.log("data1: ", data);
-    if (data?.status !== 200) {
+    if (data?.status === 401) {
       toast.error("☹️ User is unauthorized", { duration: 1000 });
+    } else if (data?.status === 500) {
+      toast.error(
+        "Check internet connection or contact devs to resolve issue",
+        { duration: 1000 }
+      );
     } else {
       toast.success("😊 User signed in successfully");
       router.push("/employee");

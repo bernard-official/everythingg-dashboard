@@ -18,9 +18,13 @@ export const getDataFromDB = async () => {
     headers: { "Content-Type": "application/json" }
   })
   if (!response.ok) {
-    throw new Error("Failed to get all users 🥹")
+    return new NextResponse(JSON.stringify({ message: "Failed to get all users 🥹" }), {
+      status: response.status
+    })
   }
-  return response
+  return new NextResponse(JSON.stringify({ message: response.json() }), {
+    status: response.status
+  })
 }
 
 export const getUserByEmailFromDB = async (email: string) => {
@@ -29,7 +33,7 @@ export const getUserByEmailFromDB = async (email: string) => {
     body: JSON.stringify({ email }),
     headers: { "Content-Type": "application/json" }
   })
-  console.log("response: ", response)
+  // console.log("response: ", response)
   if (!response.ok) {
     throw new Error("Failed to get all users 🥹")
   }
