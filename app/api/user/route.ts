@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const userData = body
-    await User.create(userData)
+    await User.create(body)
+    console.log("body: ", body)
     return new NextResponse(JSON.stringify({ message: "User created" }), { status: 201 })
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })
