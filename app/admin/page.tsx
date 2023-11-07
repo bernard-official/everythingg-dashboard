@@ -4,21 +4,27 @@ import { redirect, useRouter } from "next/navigation";
 import DashboardPage from "@/components/dashboard/dashboard";
 import Loading from "../loading";
 import { useGlobalContext } from "@/context/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getDataFromDB } from "@/services";
+import { User } from "@/types";
 
 const Page = () => {
   const { data: session, status } = useSession();
-  const { users, setUsers } = useGlobalContext();
-  // useEffect(() => {
-  //   async () => {
-  //     const allUsersFromDB = await getDataFromDB();
-  //     const data = (await allUsersFromDB.json())["getAllUsers"];
-  //     console.log("data: ", data);
-  //     setUsers(data);
-  //   };
-  // }, [users]);
+  let [myUsers, setMyUsers] = useState<User[]>([]);
 
+  useEffect(() => {
+    let value: User[] = [];
+    const url = "/api/user";
+
+    const fetchData = async () => {
+      const response = await fetch(url);
+      const json = await response.json();
+      value = json["getAllUsers"];
+      setMyUsers(value);
+    };
+    fetchData();
+    console.log("vals: ", myUsers);
+  }, []);
   if (status === "loading") {
     return <Loading />;
   }
@@ -29,7 +35,7 @@ const Page = () => {
   return (
     <>
       <title>Admin | Home</title>
-      <DashboardPage />
+      <DashboardPage data={myUsers} />
     </>
   );
 };

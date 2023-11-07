@@ -6,26 +6,36 @@ import { User } from "@/types";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "@/context/store";
+import toast from "react-hot-toast";
 
-export function RecentSales() {
+export function RecentSales({ data }: { data: User[] }) {
   const { users, setUsers } = useGlobalContext();
-  // const [allData, setAllData] = useState<User[]>(allUsers);
+  let [allData, setAllData] = useState<User[]>([]);
 
   // useEffect(() => {
-  //   console.log("everyone: ", allData);
+  //   // setAllData(data);
   // }, [allData, setAllData]);
+
+  // console.log("data: ", allData);
+  // console.log("data2: ", data)s;
 
   const removeUser = (
     e: React.MouseEvent<HTMLButtonElement>,
     userEmail: string
   ) => {
     e.preventDefault();
-    const updatedData = users.filter((user) => user.email !== userEmail);
-    setUsers(updatedData);
+    const initialDataLength = data.length;
+    const updatedData = data.filter((user) => user.email !== userEmail);
+    if (Math.abs(initialDataLength - updatedData.length) === 1) {
+      console.log("len: ", updatedData);
+      toast.success("Deleted user 👤");
+      setAllData(updatedData);
+    }
   };
+
   return (
     <div className="space-y-8">
-      {users.map((user: User, index: number) => (
+      {data.map((user: User, index: number) => (
         <div key={index} className="flex items-center">
           <Avatar className="h-9 w-9">
             <AvatarImage src="/avatars/01.png" alt="Avatar" />

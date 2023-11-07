@@ -22,17 +22,17 @@ import { allUsers } from "@/consts";
 import { useGlobalContext } from "@/context/store";
 import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
+import { User } from "@/types";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
 //   description: "Example dashboard app built using the components.",
 // };
 
-export default function DashboardPage() {
+export default function DashboardPage({ data }: { data: User[] }) {
   const { users, setUsers } = useGlobalContext();
 
-  
-
+  // console.log("hmmm: ", users);
   return (
     <>
       <div className="md:hidden">
@@ -180,7 +180,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+{users.length}</div>
+                    <div className="text-2xl font-bold">
+                      +{data?.length || 0}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       +1 since last hour
                     </p>
@@ -202,7 +204,7 @@ export default function DashboardPage() {
                     <CardDescription>Total users in the system</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <RecentSales data={data} />
                   </CardContent>
                 </Card>
               </div>

@@ -14,9 +14,7 @@ export const sendDataToDB = async (user: User) => {
 }
 
 export const getDataFromDB = async () => {
-  const response = await fetch("/api/user", {
-    headers: { "Content-Type": "application/json" }
-  })
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user`)
   if (!response.ok) {
     return new NextResponse(JSON.stringify({ message: "Failed to get all users 🥹" }), {
       status: response.status
