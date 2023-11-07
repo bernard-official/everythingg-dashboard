@@ -22,3 +22,16 @@ export const getDataFromDB = async () => {
   }
   return response
 }
+
+export const getUserByEmailFromDB = async (email: string) => {
+  const response = await fetch("/api/userEmail", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+    headers: { "Content-Type": "application/json" }
+  })
+  console.log("response: ", response)
+  if (!response.ok) {
+    throw new Error("Failed to get all users 🥹")
+  }
+  return response
+}

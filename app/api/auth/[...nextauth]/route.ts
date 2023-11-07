@@ -2,6 +2,7 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getDataFromDB, getUserByEmailFromDB } from "@/services";
 
 const handler = NextAuth({
   providers: [
@@ -14,9 +15,15 @@ const handler = NextAuth({
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials as { email: string, password: string }
-        if (email !== "john@gmail.com" || password !== "1234") {
-          throw new Error("invalid credentials");
-        }
+        console.log("details: ", email, password)
+        console.log("req email: ", req?.body?.email as string)
+        const getAll = await getDataFromDB()
+        // const checkUser = await getUserByEmailFromDB(email)
+        // console.log("checkUser: ", checkUser)
+        console.log("all: ", getAll)
+        // if (email !== "john@gmail.com" || password !== "1234") {
+        //   throw new Error("invalid credentials");
+        // }
 
         // if everything is fine
         return {

@@ -53,7 +53,8 @@ export default function UserAuthForm({
     });
     setEmail("");
     setPassword("");
-    const data = await response;
+    const data = response;
+    console.log("data1: ", data);
     if (data?.status !== 200) {
       toast.error("☹️ User is unauthorized", { duration: 1000 });
     } else {
