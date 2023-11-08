@@ -45,6 +45,7 @@ export default function UserAuthForm({
     setEmail("");
     setPassword("");
     const data = response;
+    console.log("data: ", data);
     if (data?.status === 401) {
       toast.error("☹️ User is unauthorized", { duration: 1000 });
     } else if (data?.status === 500) {

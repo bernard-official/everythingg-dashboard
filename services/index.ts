@@ -37,3 +37,13 @@ export const getUserByEmailFromDB = async (email: string) => {
   }
   return response
 }
+
+export const changePasswordHandler = async (email: string, oldPassword: string, newPassword: string) => {
+  console.log("ok", email, oldPassword, newPassword)
+  const response = await fetch("/api/change-password", {
+    method: "PATCH",
+    body: JSON.stringify({ email, oldPassword, newPassword }),
+    headers: { "Content-Type": "application/json" },
+  })
+  return response
+}

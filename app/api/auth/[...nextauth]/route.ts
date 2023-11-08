@@ -3,6 +3,9 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "@/types";
+import { hash, compare } from "bcrypt";
+
+
 
 const handler = NextAuth({
   providers: [
@@ -16,15 +19,19 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         const { email, password } = credentials as { email: string, password: string }
 
+
         const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user`)
         const getAllUsers = await response.json()
-        const filterEmail = getAllUsers["getAllUsers"].filter((user: User) => user.email === email && user.password === password)[0]
+        const filterEmail = getAllUsers["getAllUsers"].filter((user: User) => user.email === email)[0]
+        const verifyPassword = await compare(password, filterEmail.password)
         if (filterEmail.length === 0) {
           throw new Error("User not available");
         }
+        if (!verifyPassword) {
+          throw new Error("Wrong password")
+        }
         return filterEmail
       },
-
     })
   ],
   secret: process.env.GITHUB_SECRET,

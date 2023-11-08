@@ -1,11 +1,12 @@
 import User from "@/app/(models)/users";
+import { hash, compare } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    await User.create(body)
-    console.log("body: ", body)
+    let newBody = { ...body, password: await hash(body.password, 10) }
+    await User.create(newBody)
     return new NextResponse(JSON.stringify({ message: "User created" }), { status: 201 })
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })

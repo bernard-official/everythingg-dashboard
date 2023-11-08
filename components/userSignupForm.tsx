@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { Button, Input, Label } from "./ui";
 import { cn } from "@/lib/utils";
 import { useGlobalContext } from "@/context/store";
-import { sendDataToDB } from "@/services";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { sendDataToDB } from "@/services";
 
 interface UserSignupFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -36,7 +36,7 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
 
   let { users, setUsers } = useGlobalContext();
 
-  const comparePasswords = () => {
+  const comparePasswords = (myPassword: string) => {
     return password === confirmPassword;
   };
 
@@ -68,12 +68,13 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
   };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // comparePasswords(password);
     event.preventDefault();
-    if (comparePasswords()) {
+    if (comparePasswords(password)) {
       const newUser = { name: `${firstname} ${surname}`, email, password };
-      setUsers([...users, newUser]);
+      // setUsers([...users, newUser]);
       const data = await sendDataToDB(newUser);
-      if (data.ok) {
+      if (true) {
         router.refresh();
         router.push("/");
         toast.success("User signed up successfully");
