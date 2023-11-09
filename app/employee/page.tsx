@@ -1,15 +1,18 @@
 "use client"
 import { signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Loading from "../loading";
 import TaskPage from "@/components/task/task";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button, Input, Label } from "@/components/ui";
 import { changePasswordHandler } from "@/services";
+import toast from "react-hot-toast";
 
 const Page = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  const router = useRouter();
 
   const { data: session, status } = useSession();
   if (status === "loading") {
@@ -28,13 +31,25 @@ const Page = () => {
     setNewPassword(event.target.value);
   };
 
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    changePasswordHandler(
+    const result = await changePasswordHandler(
       session?.user?.email as string,
       oldPassword,
       newPassword
     );
+    if (result.status === 401) {
+      toast.error("Wrong password");
+    } else if (result.status === 200) {
+      toast.success("Successfully changed password");
+      setOldPassword("");
+      setNewPassword("");
+      router.push("/");
+    } else if (result.status === 500) {
+      toast.error("Error: password not changed😔");
+    }
+
+    console.log("result: ", result);
   };
 
   return (

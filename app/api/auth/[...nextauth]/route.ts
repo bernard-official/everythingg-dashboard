@@ -18,8 +18,6 @@ const handler = NextAuth({
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials as { email: string, password: string }
-
-
         const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user`)
         const getAllUsers = await response.json()
         const filterEmail = getAllUsers["getAllUsers"].filter((user: User) => user.email === email)[0]

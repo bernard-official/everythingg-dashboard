@@ -31,7 +31,6 @@ export const getUserByEmailFromDB = async (email: string) => {
     body: JSON.stringify({ email }),
     headers: { "Content-Type": "application/json" }
   })
-  // console.log("response: ", response)
   if (!response.ok) {
     throw new Error("Failed to get all users 🥹")
   }
@@ -39,11 +38,11 @@ export const getUserByEmailFromDB = async (email: string) => {
 }
 
 export const changePasswordHandler = async (email: string, oldPassword: string, newPassword: string) => {
-  console.log("ok", email, oldPassword, newPassword)
   const response = await fetch("/api/change-password", {
     method: "PATCH",
     body: JSON.stringify({ email, oldPassword, newPassword }),
     headers: { "Content-Type": "application/json" },
   })
+  // console.log("response: ", response)
   return response
 }
