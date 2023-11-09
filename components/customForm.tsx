@@ -59,7 +59,7 @@ const CustomForm = ({
                 &ldquo;Delivering stunning designs to my clients faster than
                 ever before.&rdquo;
               </p>
-              <footer className="text-sm">Sofia Davis</footer>
+              <footer className="text-sm">Benny Nterful</footer>
             </blockquote>
           </div>
         </div>

@@ -153,7 +153,7 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
               value={confirmPassword}
               placeholder="confirm password"
               id="confirmPassword"
-              type="confirmPassword"
+              type="Password"
               onChange={handleConfirmPasswordChange}
             />
           </div>
