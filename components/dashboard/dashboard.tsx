@@ -23,6 +23,7 @@ import { useGlobalContext } from "@/context/store";
 import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
 import { User } from "@/types";
+import UserSignupForm from "../userSignupForm";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -73,9 +74,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics" disabled>
-                Analytics
-              </TabsTrigger>
+              <TabsTrigger value="UserSignupForm">UserSignupForm</TabsTrigger>
               <TabsTrigger value="reports" disabled>
                 Reports
               </TabsTrigger>
@@ -208,6 +207,16 @@ export default function DashboardPage({ data }: { data: User[] }) {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+            <TabsContent value="UserSignupForm" className="space-y-4">
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>SignUp new Employee</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <UserSignupForm />
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
