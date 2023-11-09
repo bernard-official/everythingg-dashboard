@@ -57,7 +57,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <Tabs defaultValue="account" className="w-[400px]">
+      <Tabs defaultValue="account" className="w-full">
         <TabsList>
           <TabsTrigger value="account">Task (todo list)</TabsTrigger>
           <TabsTrigger value="password">Update Password</TabsTrigger>
@@ -68,7 +68,7 @@ const Page = () => {
         <TabsContent value="password">
         <div className="flex justify-center">
         <form
-          className="w-95 max-w-25rem mx-auto my-8"
+          className=" w-96 max-w-25rem mx-auto my-8"
           onSubmit={submitHandler}
         >
           <div className="mb-2">
@@ -95,6 +95,7 @@ const Page = () => {
               New Password
             </Label>
             <Input
+              className='flex w-full '
               id="new-password"
               type="password"
               value={newPassword}
