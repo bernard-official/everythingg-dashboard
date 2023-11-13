@@ -24,6 +24,7 @@ import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
 import { User } from "@/types";
 import UserSignupForm from "../userSignupForm";
+import EmployeeSignupForm from "../employeeSignupForm";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -75,12 +76,8 @@ export default function DashboardPage({ data }: { data: User[] }) {
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger>
-              <TabsTrigger value="reports" disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value="employeeSignupForm">
-               Employee Signup
-              </TabsTrigger>
+              <TabsTrigger value="reports" disabled>Reports</TabsTrigger>
+              <TabsTrigger value="employeeSignupForm">Employee Signup</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -211,10 +208,20 @@ export default function DashboardPage({ data }: { data: User[] }) {
             <TabsContent value="UserSignupForm" className="space-y-4">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>SignUp new Employee</CardTitle>
+                  <CardTitle>SignUp new User</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <UserSignupForm />
+                  <EmployeeSignupForm />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="EmployeeSignupForm" className="space-y-4">
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>SignUp new User</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <EmployeeSignupForm />
                 </CardContent>
               </Card>
             </TabsContent>
