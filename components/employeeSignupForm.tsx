@@ -6,7 +6,8 @@ import { useGlobalContext } from "@/context/storei";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { sendDataToDBI } from "@/services";
-import Employee from "@/app/(models)/empolyees";
+//import Employee from "@/app/(models)/empolyees";
+import { Employee } from "@/types";
 
 
 interface EmployeeSignupFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -134,7 +135,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
       const data = await sendDataToDBI(newEmployee);
       if (true) {
         router.refresh();
-        router.push("/");
+        router.push("/admin");
         toast.success("Employee signed up successfully");
       }
     } else {
@@ -144,6 +145,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
     setSurname("");
     setEmail("");
     setContact("");
+    setBirthDate("")
     setAddress("");
     setPosition("");
     setDepartment("");
@@ -155,26 +157,28 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
   };
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className=" flex-wrap ">
       <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
+        <div className=" gap-2">
+          <div className=" flex-row ">
+          <div className="">
             <Label className="sr-only" htmlFor="email">
-              Email
+              firstname
             </Label>
-            <Input
-              id="email"
+            <Input className="flex w-1/3"
+              id="firstname"
               placeholder="firstname"
               type="text"
               value={firstname}
               onChange={handlefirstnameChange}
             />
           </div>
-          <div className="grid gap-1">
+          <div className="">
             <Label className="sr-only" htmlFor="text">
               Surname
             </Label>
-            <Input
+            <Input 
+              className="flex w-1/3"
               id="surname"
               placeholder="surname"
               type="text"
@@ -183,11 +187,14 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
             />
           </div>
 
+          </div>
+         
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email
             </Label>
             <Input
+              className="flex w-1/3"
               id="email"
               placeholder="name@example.com"
               type="email"
@@ -201,22 +208,10 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
 
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="text">
-              BirthDate
-            </Label>
-            <Input
-              id="birthDate"
-              placeholder="date of birth"
-              type="date"
-              value={birthDate}
-              onChange={handleBirthDateChange}
-            />
-          </div>
-          
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="text">
               Contact
             </Label>
             <Input
+              className="flex w-1/3"
               id="contact"
               placeholder="contact"
               type="text"
@@ -230,6 +225,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Address
             </Label>
             <Input
+              className="flex w-1/3"
               id="address"
               placeholder="address"
               type="text"
@@ -243,6 +239,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Position
             </Label>
             <Input
+              className="flex w-1/3"
               id="position"
               placeholder="position"
               type="text"
@@ -256,6 +253,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Department
             </Label>
             <Input
+              className="flex w-1/3"
               id="department"
               placeholder="department"
               type="text"
@@ -265,10 +263,25 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
           </div>
 
           <div className="grid gap-1">
-            <Label className="" htmlFor="text">
+            <Label className="flex text-gray-500" htmlFor="text">
+              BirthDate
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="birthDate"
+              placeholder="date of birth"
+              type="date"
+              value={birthDate}
+              onChange={handleBirthDateChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className=" text-gray-500" htmlFor="text">
               Hire Date
             </Label>
             <Input
+              className="flex w-1/3"
               id="hireDate"
               placeholder="hireDate"
               type="date"
@@ -282,6 +295,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Salary
             </Label>
             <Input
+              className="flex w-1/3"
               id="salary"
               placeholder="salary"
               type="text"
@@ -291,10 +305,11 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
           </div>
 
           <div className="grid gap-1">
-            <Label className="" htmlFor="text">
+            <Label className=" text-gray-500" htmlFor="text">
               active
             </Label>
             <Input
+              className="flex w-1/3"
               id="manager"
               placeholder="manager"
               type="checkbox"
@@ -308,6 +323,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Password
             </Label>
             <Input
+              className="flex w-1/3"
               value={password}
               id="password"
               type="password"
@@ -320,6 +336,7 @@ const EmployeeSignupForm = ({ className, ...props }: EmployeeSignupFormProps) =>
               Confirm Password
             </Label>
             <Input
+              className="flex w-1/3"
               value={confirmPassword}
               placeholder="confirm password"
               id="confirmPassword"

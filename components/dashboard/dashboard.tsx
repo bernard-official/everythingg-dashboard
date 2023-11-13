@@ -22,7 +22,7 @@ import { allUsers } from "@/consts";
 import { useGlobalContext } from "@/context/store";
 import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
-import { User } from "@/types";
+import { Employee, User } from "@/types";
 import UserSignupForm from "../userSignupForm";
 import EmployeeSignupForm from "../employeeSignupForm";
 
@@ -31,7 +31,7 @@ import EmployeeSignupForm from "../employeeSignupForm";
 //   description: "Example dashboard app built using the components.",
 // };
 
-export default function DashboardPage({ data }: { data: User[] }) {
+export default function DashboardPage({ data }: { data: User[] },{dataI}:{dataI: Employee[]}) {
   const { users, setUsers } = useGlobalContext();
 
   // console.log("hmmm: ", users);
@@ -56,7 +56,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <TeamSwitcher />
+            {/* <TeamSwitcher /> */}
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <Search placeholder="Search..." />
@@ -67,16 +67,12 @@ export default function DashboardPage({ data }: { data: User[] }) {
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-            <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker />
-              <Button>Download</Button>
-            </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger>
-              <TabsTrigger value="reports" disabled>Reports</TabsTrigger>
+              {/* <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger> */}
+              <TabsTrigger value="UserSignupForm">Employee Signup</TabsTrigger>
               <TabsTrigger value="employeeSignupForm">Employee Signup</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
@@ -96,65 +92,15 @@ export default function DashboardPage({ data }: { data: User[] }) {
                       strokeWidth="2"
                       className="h-4 w-4 text-muted-foreground"
                     >
-                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
-                    <p className="text-xs text-muted-foreground">
-                      +20.1% from last month
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Subscriptions
-                    </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">+2350</div>
-                    <p className="text-xs text-muted-foreground">
-                      +180.1% from last month
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <rect width="20" height="14" x="2" y="5" rx="2" />
-                      <path d="M2 10h20" />
-                    </svg>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
-                    <p className="text-xs text-muted-foreground">
-                      +19% from last month
-                    </p>
+                    <div className="text-2xl font-bold">
+                      {dataI?.length || 0}
+                    </div><span className="text-xs text-muted-foreground">
+                      employees
+                    </span>
                   </CardContent>
                 </Card>
                 <Card>
@@ -179,9 +125,6 @@ export default function DashboardPage({ data }: { data: User[] }) {
                     <div className="text-2xl font-bold">
                       +{data?.length || 0}
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      +1 since last hour
-                    </p>
                   </CardContent>
                 </Card>
               </div>
@@ -208,20 +151,20 @@ export default function DashboardPage({ data }: { data: User[] }) {
             <TabsContent value="UserSignupForm" className="space-y-4">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>SignUp new User</CardTitle>
+                  <CardTitle>SignUp new Employees</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <EmployeeSignupForm />
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="EmployeeSignupForm" className="space-y-4">
-              <Card className="col-span-4">
+            <TabsContent value="EmployeeSignupForm" className="flex-wrap ">
+              <Card className="">
                 <CardHeader>
                   <CardTitle>SignUp new User</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <EmployeeSignupForm />
+                  <EmployeeSignupForm /> 
                 </CardContent>
               </Card>
             </TabsContent>

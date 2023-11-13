@@ -46,7 +46,6 @@ export function RecentSales({ data }: { data: User[] }) {
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           <div className="ml-auto flex space-x-4 items-center">
-            <div className="font-medium">+${32 * index}</div>
             <Button
               onClick={(e) => removeUser(e, user.email)}
               className="bg-red-500 hover:bg-red-700"
