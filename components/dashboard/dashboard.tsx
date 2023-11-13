@@ -58,7 +58,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
             <TeamSwitcher />
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
-              <Search />
+              <Search placeholder="Search..." />
               <UserNav />
             </div>
           </div>
@@ -74,12 +74,12 @@ export default function DashboardPage({ data }: { data: User[] }) {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="UserSignupForm">UserSignupForm</TabsTrigger>
+              <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger>
               <TabsTrigger value="reports" disabled>
                 Reports
               </TabsTrigger>
-              <TabsTrigger value="notifications" disabled>
-                Notifications
+              <TabsTrigger value="employeeSignupForm">
+               Employee Signup
               </TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
@@ -87,7 +87,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Revenue
+                      Total Employees
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
