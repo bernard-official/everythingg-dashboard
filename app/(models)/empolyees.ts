@@ -4,42 +4,16 @@ mongoose.connect(`${process.env.MONGO_URI as string}`);
 mongoose.Promise;
 
 const employeeSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    require: true,
-    unique: true,
-  },
-  contact: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  position: {
-    type: String,
-  },
-  department: {
-    type: String,
-  },
-  hireDate: {
-    type: Date,
-    default: Date.now,
-  },
-  manager: {
-    type: Boolean,
-    default: false,
-  },
-  salary: {
-    type: String,
-  },
+  firstName: String,
+  lastName: String,
+  email: String,
+  contact: String,
+  address: String,
+  position: String,
+  department: String,
+  hireDate: Date,
+  manager: Boolean,
+  salary: String
 });
 
 const Employee =

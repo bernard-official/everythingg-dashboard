@@ -7,7 +7,8 @@ mongoose.Promise = global.Promise
 const userSchema = new Schema({
   name: String,
   email: String,
-  password: String
+  password: String,
+  
 })
 
 const User = mongoose.models.User || mongoose.model("User", userSchema)

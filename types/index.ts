@@ -16,8 +16,8 @@ export type Employee = {
   address: string
   position: string
   department: string
-  hireDate:  new Date(hireDate),
-  manager:  Boolean(manager),
+  hireDate: Date
+  manager:  Boolean
   salary: string
   createdAt?: Date,
   updatedAt?: Date
