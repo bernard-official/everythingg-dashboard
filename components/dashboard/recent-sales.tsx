@@ -35,7 +35,7 @@ export function RecentSales({ data }: { data: User[] }) {
 
   return (
     <div className="space-y-8">
-      {data.map((user: User, index: number) => (
+      {/* {data.map((user: User, index: number) => (
         <div key={index} className="flex items-center">
           <Avatar className="h-9 w-9">
             <AvatarImage src="/avatars/01.png" alt="Avatar" />
@@ -54,7 +54,7 @@ export function RecentSales({ data }: { data: User[] }) {
             </Button>
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 }

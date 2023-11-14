@@ -21,9 +21,8 @@ import { allUsers } from "@/consts";
 import { useGlobalContext } from "@/context/store";
 import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
-import { Employee, User } from "@/types";
+import {  User } from "@/types";
 import UserSignupForm from "../userSignupForm";
-import EmployeeSignupForm from "../employeeSignupForm";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -117,7 +116,6 @@ export default function DashboardPage({ data }: { data: User[] }) {
                   <CardTitle>SignUp new Employees</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  {/* <EmployeeSignupForm /> */}
                   <UserSignupForm />
                 </CardContent>
               </Card>

@@ -31,6 +31,14 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [contact, setContact] = useState("");
+  const [address, setAddress] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [position, setPosition] = useState("");
+  const [department, setDepartment] = useState("");
+  const [hireDate, setHireDate] = useState("");
+  const [manager, setManager] = useState(false);
+  const [salary, setSalary] = useState("");
 
   const router = useRouter();
 
@@ -67,16 +75,65 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
     setConfirmPassword(event.target.value);
   };
 
+  const handleContactChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setContact(event.target.value);
+  }
+
+  const handleAddressChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setAddress(event.target.value);
+  }
+
+  const handleBirthDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setBirthDate(event.target.value);
+  }
+
+  const handlePositionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setPosition(event.target.value);
+  }
+
+  const handleDepartmentChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setDepartment(event.target.value);
+  }
+
+  const handleHireDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setHireDate(event.target.value);
+  }
+
+  const handleManagerChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setManager(event.target.checked);
+  }
+
+  const handleSalaryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>{
+    setSalary(event.target.value);
+  }
+
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // comparePasswords(password);
     event.preventDefault();
     if (comparePasswords(password)) {
-      const newUser = { name: `${firstname} ${surname}`, email, password };
+      const newUser = { name: `${firstname} ${surname}`, email, password, contact, address, position, department, birthDate: new Date(birthDate), hireDate: new Date(hireDate), manager, salary };
       // setUsers([...users, newUser]);
       const data = await sendDataToDB(newUser);
       if (true) {
         router.refresh();
-        router.push("/");
+        router.push("/admin");
         toast.success("User signed up successfully");
       }
     } else {
@@ -85,6 +142,14 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
     setFirstname("");
     setSurname("");
     setEmail("");
+    setContact("");
+    setBirthDate("")
+    setAddress("");
+    setPosition("");
+    setDepartment("");
+    setHireDate("");
+    setManager(false);
+    setSalary("")
     setPassword("");
     setConfirmPassword("");
   };
@@ -133,6 +198,119 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
               onChange={handleEmailChange}
             />
           </div>
+
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="text">
+              Contact
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="contact"
+              placeholder="contact"
+              type="text"
+              value={contact}
+              onChange={handleContactChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="text">
+              Address
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="address"
+              placeholder="address"
+              type="text"
+              value={address}
+              onChange={handleAddressChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="text">
+              Position
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="position"
+              placeholder="position"
+              type="text"
+              value={position}
+              onChange={handlePositionChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="text">
+              Department
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="department"
+              placeholder="department"
+              type="text"
+              value={department}
+              onChange={handleDepartmentChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="flex text-gray-500" htmlFor="text">
+              BirthDate
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="birthDate"
+              placeholder="date of birth"
+              type="date"
+              value={birthDate}
+              onChange={handleBirthDateChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className=" text-gray-500" htmlFor="text">
+              Hire Date
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="hireDate"
+              placeholder="hireDate"
+              type="date"
+              value={hireDate}
+              onChange={handleHireDateChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="text">
+              Salary
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="salary"
+              placeholder="salary"
+              type="text"
+              value={salary}
+              onChange={handleSalaryChange}
+            />
+          </div>
+
+          <div className="grid gap-1">
+            <Label className=" text-gray-500" htmlFor="text">
+              active
+            </Label>
+            <Input
+              className="flex w-1/3"
+              id="manager"
+              placeholder="manager"
+              type="checkbox"
+              checked={manager}
+              onChange={handleManagerChange}
+            />
+          </div>
+
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="password">
               Password
@@ -145,6 +323,7 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
               onChange={handlePasswordChange}
             />
           </div>
+
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="confirmPassword">
               Confirm Password
