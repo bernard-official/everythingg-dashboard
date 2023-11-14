@@ -54,9 +54,9 @@ export default function DashboardPage({ data }: { data: User[] }) {
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-          <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          </div>
+            <div className="flex items-center justify-between space-y-2">
+              <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+            </div>
             <div className="ml-auto flex items-center space-x-4">
               <Search placeholder="Search..." />
               <UserNav />
@@ -64,12 +64,11 @@ export default function DashboardPage({ data }: { data: User[] }) {
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          
           <Tabs defaultValue="overview" className="space-y-2">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               {/* <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger>  */}
-              <TabsTrigger value="UserSignupForm">Employee Signup</TabsTrigger> 
+              <TabsTrigger value="UserSignupForm">Employee Signup</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -112,8 +111,8 @@ export default function DashboardPage({ data }: { data: User[] }) {
 
             <TabsContent value="UserSignupForm" className="space-y-4">
               <Card className="col-span-4">
-                <CardHeader>
-                  <CardTitle>SignUp new Employees</CardTitle>
+                <CardHeader className="text-center font-semibold text-2xl">
+                  <CardTitle>SignUp Employees</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <UserSignupForm />

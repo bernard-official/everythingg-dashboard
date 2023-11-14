@@ -23,7 +23,6 @@ const Page = () => {
       setMyUsers(value);
     };
     fetchData();
-    console.log("vals: ", myUsers);
   }, []);
   if (status === "loading") {
     return <Loading />;
