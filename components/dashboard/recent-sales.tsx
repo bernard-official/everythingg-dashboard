@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "@/context/store";
 import toast from "react-hot-toast";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
 
 export function RecentSales({ data }: { data: User[] }) {
   const { users, setUsers } = useGlobalContext();
@@ -35,6 +37,7 @@ export function RecentSales({ data }: { data: User[] }) {
 
   return (
     <div className="space-y-8">
+       <DataTable columns={columns} data={data}/>
       {/* {data.map((user: User, index: number) => (
         <div key={index} className="flex items-center">
           <Avatar className="h-9 w-9">
