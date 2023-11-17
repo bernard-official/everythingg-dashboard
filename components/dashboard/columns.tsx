@@ -15,18 +15,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { deleteUserFromDB } from "@/services";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
+import { deleteUserFromDB } from "@/services";
+import { User } from "@/types";
+
+
 
 //Columns are where you define the core of what your table will look like. They define the data that will be displayed, how it will be formatted, sorted and filtered.
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -95,17 +92,6 @@ export const columns: ColumnDef<Payment>[] = [
     }
   },
   {
-    accessorKey: "amount",
-    header:() => <div>Amount</div>,
-    cell:({ row }) => {
-        const amount = parseFloat(row.getValue('amount'))
-        const formatted = new Intl.NumberFormat("en-US",{
-            style: "currency",
-            currency: "GHC",
-        }).format(amount)
-    }
-  },
-  {
     //go back to ROW actions to add updates
     id: "actions",
     cell: ({ row }) => {
@@ -131,14 +117,9 @@ export const columns: ColumnDef<Payment>[] = [
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => deleteUserFromDB(payment.id)}
+              onClick={() => deleteUserFromDB(users.id)}
             >
               Remove Employee
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
