@@ -131,7 +131,7 @@ const UserSignupForm = ({ className, ...props }: UserSignupFormProps) => {
       };
       // setUsers([...users, newUser]);
       const data = await sendDataToDB(newUser);
-      if (data.status === 200) {
+      if (data.status === 201) {
         router.refresh();
         router.push("/admin");
         toast.success("User signed up successfully");

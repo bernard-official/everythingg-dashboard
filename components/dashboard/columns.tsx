@@ -4,6 +4,8 @@ import { ArrowUpDown ,MoreHorizontal } from "lucide-react"
 import { getAbbreviation } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "..";
 
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { deleteUserFromDB } from "@/services";
 
 export type Payment = {
   id: string;
@@ -24,6 +27,25 @@ export type Payment = {
 //Columns are where you define the core of what your table will look like. They define the data that will be displayed, how it will be formatted, sorted and filtered.
 
 export const columns: ColumnDef<Payment>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "status",
     header: "Status",
@@ -89,6 +111,10 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       const payment = row.original
 
+      const handleEditClick = () => {
+        
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -100,13 +126,21 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
+              onClick={handleEditClick}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => deleteUserFromDB(payment.id)}
+            >
+              Remove Employee
+            </DropdownMenuItem>
+            <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

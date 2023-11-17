@@ -78,6 +78,37 @@ export const getUserByEmailFromDB = async (email: string) => {
   return response
 }
 
+export const updateUserInDB = async (userId: string, updatedUserData: Partial<User>) => {
+  const response = await fetch(`/api/user/${userId}`, {
+    method: "PATCH", // Use PATCH for partial updates or PUT for full updates
+    body: JSON.stringify(updatedUserData),
+    headers: { "Content-Type": "application/json" }
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update user 🥹");
+  }
+
+  return response.json();
+};
+
+
+export const deleteUserFromDB = async (userId: string) => {
+  const response = await fetch(`/api/user/${userId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" }
+  });
+
+  if (!response.ok) {
+    const errorResponse = await response.json();// Assuming the server sends back an error response in JSON format
+    throw new Error(`Failed to delete user 🥹.  Error: ${errorResponse.message}`);
+  }
+
+  return response.json(); // Assuming the server sends back a response in JSON format
+};
+
+
+
 export const changePasswordHandler = async (email: string, oldPassword: string, newPassword: string) => {
   const response = await fetch("/api/change-password", {
     method: "PATCH",
