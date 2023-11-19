@@ -21,3 +21,34 @@ export async function GET() {
     return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })
   }
 }
+
+// TODO: Function to make call to mongodb to update a user: This should work but might need tweaking
+export async function DELETE(req: NextRequest) {
+  try {
+    const { userId } = await req.json()
+    const user = await User.findOneAndDelete({ _id: userId })
+    if (!user) {
+      return new NextResponse(JSON.stringify({ message: "User not found" }), { status: 404 })
+    }
+    return new NextResponse(JSON.stringify({ user }), { status: 200 })
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })
+  }
+}
+
+
+// TODO: Function to make call to mongodb to delete a user, if the user exists
+export async function PATCH(req: NextRequest) {
+  try {
+    const { user } = await req.json()
+    const updateUser = await User.findOneAndUpdate({ _id: user._id }, { user }, {
+      new: true
+    })
+    if (!updateUser) {
+      return new NextResponse(JSON.stringify({ message: "User not found" }), { status: 404 })
+    }
+    return new NextResponse(JSON.stringify({ user }), { status: 200 })
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ message: "Error: ", error }), { status: 500 })
+  }
+}

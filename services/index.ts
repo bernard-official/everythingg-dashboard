@@ -78,33 +78,36 @@ export const getUserByEmailFromDB = async (email: string) => {
   return response
 }
 
-export const updateUserInDB = async (userId: string, updatedUserData: Partial<User>) => {
-  const response = await fetch(`/api/user/${userId}`, {
-    method: "PATCH", // Use PATCH for partial updates or PUT for full updates
-    body: JSON.stringify(updatedUserData),
-    headers: { "Content-Type": "application/json" }
-  });
+export const updateUserInDB = async (updatedUserData: Partial<User>) => {
+  // TODO: Commenting it out for now
+  // const response = await fetch(`/api/user`, {
+  //   method: "PATCH", // Use PATCH for partial updates or PUT for full updates
+  //   body: JSON.stringify(updatedUserData),
+  //   headers: { "Content-Type": "application/json" }
+  // });
 
-  if (!response.ok) {
-    throw new Error("Failed to update user 🥹");
-  }
+  // if (!response.ok) {
+  //   throw new Error("Failed to update user 🥹");
+  // }
 
-  return response.json();
+  // return response.json();
 };
 
 
 export const deleteUserFromDB = async (userId: string) => {
-  const response = await fetch(`/api/user/${userId}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" }
-  });
+  // TODO: Commenting it out for now
+  // const response = await fetch(`/api/user`, {
+  //   method: "DELETE",
+  //   body: userId,
+  //   headers: { "Content-Type": "application/json" }
+  // });
 
-  if (!response.ok) {
-    const errorResponse = await response.json();// Assuming the server sends back an error response in JSON format
-    throw new Error(`Failed to delete user 🥹.  Error: ${errorResponse.message}`);
-  }
+  // if (!response.ok) {
+  //   const errorResponse = await response.json();// Assuming the server sends back an error response in JSON format
+  //   throw new Error(`Failed to delete user 🥹.  Error: ${errorResponse.message}`);
+  // }
 
-  return response.json(); // Assuming the server sends back a response in JSON format
+  // return response.json(); // Assuming the server sends back a response in JSON format
 };
 
 
