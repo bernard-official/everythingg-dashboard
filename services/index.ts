@@ -94,20 +94,14 @@ export const updateUserInDB = async (updatedUserData: Partial<User>) => {
 };
 
 
-export const deleteUserFromDB = async (userId: string) => {
+export const deleteUserFromDB = async (data: string) => {
   // TODO: Commenting it out for now
-  // const response = await fetch(`/api/user`, {
-  //   method: "DELETE",
-  //   body: userId,
-  //   headers: { "Content-Type": "application/json" }
-  // });
-
-  // if (!response.ok) {
-  //   const errorResponse = await response.json();// Assuming the server sends back an error response in JSON format
-  //   throw new Error(`Failed to delete user 🥹.  Error: ${errorResponse.message}`);
-  // }
-
-  // return response.json(); // Assuming the server sends back a response in JSON format
+  const response = await fetch(`/api/user/delete`, {
+    method: "POST",
+    body: JSON.stringify({ userId: data }),
+    headers: { "Content-Type": "application/json" }
+  });
+  return response
 };
 
 

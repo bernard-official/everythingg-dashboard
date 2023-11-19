@@ -24,6 +24,7 @@ import {
 
 import { deleteUserFromDB, updateUserInDB } from "@/services";
 import { User } from "@/types";
+import toast from "react-hot-toast";
 
 //Columns are where you define the core of what your table will look like. They define the data that will be displayed, how it will be formatted, sorted and filtered.
 
@@ -43,10 +44,19 @@ const removeUser = async (
   user: Row<User>
 ) => {
   // Convert to Partial User
-  // This is WIP we can hop on a call to discuss this
-  const sampleUser: Partial<User> = {};
-  const response = await deleteUserFromDB("userID");
-  console.log("Remove response", response);
+  const userId = user.original._id as string;
+
+  const response = await deleteUserFromDB(userId);
+  if (response.status === 200) {
+    toast.success("User removed successfully", { icon: "🗑️" });
+  } else if (response.status === 404) {
+    toast.error("User not found", { icon: "🤔" });
+  } else {
+    toast.error("Server error", { icon: "🔥" });
+  }
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
 };
 
 export const columns: ColumnDef<User>[] = [
