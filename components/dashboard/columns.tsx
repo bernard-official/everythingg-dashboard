@@ -25,6 +25,9 @@ import {
 import { deleteUserFromDB, updateUserInDB } from "@/services";
 import { User } from "@/types";
 import toast from "react-hot-toast";
+import { any, string } from "zod";
+
+
 
 //Columns are where you define the core of what your table will look like. They define the data that will be displayed, how it will be formatted, sorted and filtered.
 
@@ -33,17 +36,17 @@ const editUser = async (
   user: Row<User>
 ) => {
   // Convert to Partial User
-  // This is WIP we can hop on a call to discuss this
   const sampleUser: Partial<User> = {};
   const response = await updateUserInDB(sampleUser);
   console.log("Edit response", response);
 };
 
+
+
 const removeUser = async (
   event: React.MouseEvent<SVGSVGElement>,
   user: Row<User>
 ) => {
-  // Convert to Partial User
   const userId = user.original._id as string;
 
   const response = await deleteUserFromDB(userId);
@@ -82,10 +85,16 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    meta:{
+      type: any
+    }
   },
   {
     accessorKey: "name",
     header: "Name",
+    meta:{
+      type: string
+    },
   },
   {
     accessorKey: "email",
@@ -105,14 +114,23 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "position",
     header: "Position",
+    meta:{
+      type: string
+    },
   },
   {
     accessorKey: "department",
     header: "Dept.",
+    meta:{
+      type: any
+    },
   },
   {
     accessorKey: "contact",
     header: "Contact",
+    meta:{
+      type: string
+    }
   },
   {
     accessorKey: "salary",
@@ -125,6 +143,9 @@ export const columns: ColumnDef<User>[] = [
       }).format(salary);
 
       return <div className="text-left font-medium">{formatted}</div>;
+    },
+    meta:{
+      type: string
     },
   },
   {

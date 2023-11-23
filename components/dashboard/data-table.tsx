@@ -32,13 +32,17 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { reportWebVitals } from "next/dist/build/templates/pages";
+import { PenSquare } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
+  updateData,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -49,6 +53,32 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [dataii, setDataii] = React.useState(()=>[...data])
+  // const [editedRows, setEditedRows] = React.useState({});
+
+  // const EditCell = ({ row, table }) => {
+  //   const meta = table.options.meta
+  
+  //   const setEditedRows = (e: MouseEvent) => {
+  //     meta?.setEditedRows((old: []) => ({
+  //       ...old,
+  //       [row.id]: !old[row.id]
+  //     }))
+  //   }
+
+  //   return meta?.editedRows[row.id] ? (
+  //     <>
+  //       <button>X</button> <button onClick={setEditedRows}>👍🏼</button>
+  //     </>
+  //   ): (
+  //     <PenSquare
+  //     onClick={setEditedRows}
+  //     color="gray"
+  //     className="hover:cursor-pointer hover:scale-105"
+  //   />
+  //   )
+
+  // } 
 
   const table = useReactTable({
     data,
@@ -67,6 +97,27 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
+    // meta: {
+    //   editedRows,
+    //   setEditedRows,
+      
+    // },
+  
+    meta: {
+      updateData: (rowIndex: number, columnId: string, value: string) => {
+        setDataii((old) =>
+        old.map((row: any, index: number) => {
+          if(index === rowIndex) {
+            return {
+              ...old[ rowIndex ],
+              [columnId]: value
+            };
+          }
+          return row
+        }
+        ))
+      }
+    }
   });
   return (
     <div>

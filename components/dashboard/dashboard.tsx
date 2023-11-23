@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { getDataFromDB } from "@/services";
 import {  User } from "@/types";
 import UserSignupForm from "../userSignupForm";
+import NewTable from "./newtable";
 
 // export const metadata: Metadata = {
 //   title: "Dashboard",
@@ -104,6 +105,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
                   </CardHeader>
                   <CardContent>
                     <RecentSales data={data} />
+                    <NewTable />
                   </CardContent>
                 </Card>
               </div>

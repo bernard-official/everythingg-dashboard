@@ -30,3 +30,10 @@ export type Employee = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
+
+export type Student = {
+  studentId: number;
+  name: string;
+  dateOfBirth: string;
+  major: string;
+};
