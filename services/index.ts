@@ -80,8 +80,9 @@ export const getUserByEmailFromDB = async (email: string) => {
 
 export const updateUserInDB = async (updatedUserData: Partial<User>) => {
   // TODO: Commenting it out for now
-  const response = await fetch(`/api/user`, {
-    method: "PATCH", // Use PATCH for partial updates or PUT for full updates
+
+  const response = await fetch(`/api/user/update`, {
+    method: "POST", // Use PATCH for partial updates or PUT for full updates
     body: JSON.stringify(updatedUserData),
     headers: { "Content-Type": "application/json" }
   });
@@ -90,7 +91,7 @@ export const updateUserInDB = async (updatedUserData: Partial<User>) => {
     throw new Error("Failed to update user 🥹");
   }
 
-  return response.json();
+  return response;
 };
 
 

@@ -37,7 +37,7 @@ export function RecentSales({ data }: { data: User[] }) {
 
   return (
     <div className="space-y-8">
-       <DataTable columns={columns} data={data}/>
+      {/* <DataTable columns={columns} data={data}/> */}
       {/* {data.map((user: User, index: number) => (
         <div key={index} className="flex items-center">
           <Avatar className="h-9 w-9">
