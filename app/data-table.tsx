@@ -25,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -37,7 +37,7 @@ import { PenSquare } from "lucide-react";
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
-  // updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void;
   editedRows: {};
   setEditedRows: Function;
   columns: ColumnDef<TData, TValue>[];
@@ -47,15 +47,23 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   editedRows,
   setEditedRows,
+  updateData,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [dataii, setDataii] = useState([...data]);
-  console.log("da:", dataii);
+  const [dataii, setDataii] = useState(() => [...data]);
+  const [newData, setNewData] = useState([...data]);
+  const [originalData, setOriginalData] = useState([...data]);
+
+  // const [editedRows, setEditedRows] = React.useState({});
+
   const table = useReactTable({
     data,
     columns,
@@ -73,14 +81,25 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
-
     meta: {
       editedRows,
       setEditedRows,
+      reverData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setNewData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? originalData[rowIndex] : row
+            )
+          );
+        } else {
+          setOriginalData((old) =>
+            old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
+          );
+        }
+      },
       updateData: (rowIndex: number, columnId: string, value: string) => {
-        console.log("before update", dataii, rowIndex);
-        setDataii((old) =>
-          old.map((row: any, index: number) => {
+        setNewData((old) =>
+          old.map((row, index) => {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
@@ -90,21 +109,9 @@ export function DataTable<TData, TValue>({
             return row;
           })
         );
-        // console.log("before update", dataii[rowIndex]);
-        console.log("after update", dataii, rowIndex);
       },
     },
   });
-
-  // const onBlur = (table) => {
-  //   table.options.meta?.updateData(row.index, column.id, value);
-  // };
-
-  // const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   event.preventDefault();
-  //   setValue(event.target.value);
-  //   tableMeta?.updateData(row.index, column.id, event.target.value);
-  // };
   return (
     <div>
       <div className="flex items-center py-4">

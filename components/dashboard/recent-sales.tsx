@@ -13,12 +13,13 @@ import { DataTable } from "./data-table";
 export function RecentSales({ data }: { data: User[] }) {
   const { users, setUsers } = useGlobalContext();
   let [allData, setAllData] = useState<User[]>([]);
+  const [editedRows, setEditedRows] = useState({});
 
   // useEffect(() => {
   //   // setAllData(data);
   // }, [allData, setAllData]);
 
-  // console.log("data: ", allData);
+  console.log("data: ", allData);
   // console.log("data2: ", data)s;
 
   const removeUser = (
@@ -34,10 +35,14 @@ export function RecentSales({ data }: { data: User[] }) {
       setAllData(updatedData);
     }
   };
-
   return (
     <div className="space-y-8">
-       <DataTable columns={columns} data={data}/>
+      <DataTable
+        editedRows={editedRows}
+        setEditedRows={setEditedRows}
+        columns={columns}
+        data={data}
+      />
       {/* {data.map((user: User, index: number) => (
         <div key={index} className="flex items-center">
           <Avatar className="h-9 w-9">

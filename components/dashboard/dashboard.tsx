@@ -32,6 +32,7 @@ import NewTable from "./newtable";
 
 export default function DashboardPage({ data }: { data: User[] }) {
   const { users, setUsers } = useGlobalContext();
+  console.log("all", data);
 
   // console.log("hmmm: ", users);
   return (

@@ -36,4 +36,5 @@ export type Student = {
   name: string;
   dateOfBirth: string;
   major: string;
+  edit?: string;
 };

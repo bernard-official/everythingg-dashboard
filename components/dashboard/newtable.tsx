@@ -1,10 +1,4 @@
-
-import React, {
-  ChangeEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Student } from "@/types";
 import {
   createColumnHelper,
@@ -12,10 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table } from "..";
-import { tr } from "date-fns/locale";
 import { PenSquare } from "lucide-react";
-import { any } from "zod";
 
 interface DataTableProps<TData, TValue> {
   updateData: (rowIndex: number, columnId: string, value: unknown) => void;
@@ -64,9 +55,10 @@ const TableCell = ({ getValue, row, column, table }) => {
     table.options.meta?.updateData(row.index, column.id, value);
   };
 
-  const onSelectChange = (e: ChangeEvent) => {
-    setValue(e.target.value);
-    tableMeta?.updateData(row.index, column.id, e.target.value);
+  const onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    event.preventDefault();
+    setValue(event.target.value);
+    tableMeta?.updateData(row.index, column.id, event.target.value);
   };
 
   if (tableMeta?.editedRows[row.id]) {
@@ -80,6 +72,7 @@ const TableCell = ({ getValue, row, column, table }) => {
       </select>
     ) : (
       <input
+        className="w-12"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
@@ -92,26 +85,29 @@ const TableCell = ({ getValue, row, column, table }) => {
 
 const EditCell = ({ row, table }) => {
   const meta = table.options.meta;
-  const setEditedRows = (e: MouseEvent) => {
-    const elName = e.currentTarget.name
+  const setEditedRows = (
+    event: React.MouseEvent<HTMLButtonElement | SVGSVGElement>
+  ) => {
+    event.preventDefault();
+    console.log("data", row.original);
+    console.log("row", row);
     meta?.setEditedRows((old: []) => ({
       ...old,
       [row.id]: !old[row.id],
     }));
-    if (elName !== "edit") {
-      meta?.revertData(row.index, e.currentTarget.name === "cancel")
-    }
   };
   return meta?.editedRows[row.id] ? (
     <>
-      <button>X</button> <button onClick={setEditedRows}>✔</button>
+      <button onClick={setEditedRows}>✔</button>
     </>
   ) : (
-    <PenSquare
-      onClick={setEditedRows}
-      color="gray"
-      className="hover:cursor-pointer hover:scale-105"
-    />
+    <>
+      <PenSquare
+        onClick={setEditedRows}
+        color="gray"
+        className="hover:cursor-pointer hover:scale-105"
+      />
+    </>
   );
 };
 
@@ -152,17 +148,27 @@ const columns = [
       ],
     },
   }),
-  columnHelper.display({
+  columnHelper.accessor("edit", {
+    header: "edit",
     id: "edit",
     cell: EditCell,
   }),
+  //   columnHelper.display({
+  //   id: "edit",
+  //   cell: EditCell,
+  // }),
+  // columnHelper.accessor("edit", {
+  //   header: "edit",
+  //   id: "edit",
+  //   cell: EditCell,
+  // }),
 ];
 
 const NewTable = () => {
   //when converting this to work with the users data convert verify the usage data name
   const [editedRows, setEditedRows] = useState({});
-  const [originalData, setOriginalData] = useState(() => [...defaultData]);
-  const [data, setData] = useState(() => [...defaultData]);
+  const [originalData, setOriginalData] = useState([...defaultData]);
+  const [data, setData] = useState([...defaultData]);
 
   const table = useReactTable({
     data,
@@ -171,17 +177,18 @@ const NewTable = () => {
     meta: {
       editedRows,
       setEditedRows,
-      reverData:(rowIndex: number, revert:boolean) => {
-        if(revert){
-          setData((old)=> old.map((row,index) =>
-          index === rowIndex ? originalData[rowIndex] : row
-          )
-        );
+      reverData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? originalData[rowIndex] : row
+            )
+          );
         } else {
-          setOriginalData((old) => 
-          old.map((row,index) => (index === rowIndex ? data[rowIndex] : row))
-          )
-        } 
+          setOriginalData((old) =>
+            old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
+          );
+        }
       },
       updateData: (rowIndex: number, columnId: string, value: string) => {
         setData((old) =>

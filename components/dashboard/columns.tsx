@@ -1,18 +1,20 @@
 "use clients";
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { ColumnDef, Row, TableMeta } from "@tanstack/react-table";
 import {
   ArrowUpDown,
   MoreHorizontal,
   PenSquare,
+  Check,
   Pencil,
   Trash2,
 } from "lucide-react";
 import { getAbbreviation } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "..";
+import { Avatar, AvatarFallback, AvatarImage, TableCell } from "..";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,8 +28,7 @@ import { deleteUserFromDB, updateUserInDB } from "@/services";
 import { User } from "@/types";
 import toast from "react-hot-toast";
 import { any, string } from "zod";
-
-
+import { useEffect, useState } from "react";
 
 //Columns are where you define the core of what your table will look like. They define the data that will be displayed, how it will be formatted, sorted and filtered.
 
@@ -40,8 +41,6 @@ const editUser = async (
   const response = await updateUserInDB(sampleUser);
   console.log("Edit response", response);
 };
-
-
 
 const removeUser = async (
   event: React.MouseEvent<SVGSVGElement>,
@@ -61,7 +60,54 @@ const removeUser = async (
     window.location.reload();
   }, 2000);
 };
+const EditCell = ({ row, table }) => {
+  const meta = table.options.meta;
+  const editRows = (
+    event: React.MouseEvent<HTMLButtonElement | SVGSVGElement>
+  ) => {
+    event.preventDefault();
+    meta.setEditedRows((old: []) => ({
+      ...old,
+      [row.id]: !old[row.id],
+    }));
+  };
+  return meta?.editedRows[row.id] ? (
+    <Check color="gray" className="hover:cursor-pointer" onClick={editRows} />
+  ) : (
+    <PenSquare
+      onClick={editRows}
+      color="gray"
+      className="hover:cursor-pointer hover:scale-105"
+    />
+  );
+};
 
+const CustomTableCell = ({ getValue, row, column, table }) => {
+  const initialValue = getValue();
+  const columnMeta = column.columnDef.meta;
+  const tableMeta = table.options.meta;
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  const onBlur = () => {
+    table.options.meta?.updateData(row.index, column.id, value);
+  };
+
+  if (tableMeta?.editedRows[row.id]) {
+    return (
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={onBlur}
+        type={column.columnDef.meta?.type || "text"}
+      />
+    );
+  }
+  return <span>{value}</span>;
+};
 export const columns: ColumnDef<User>[] = [
   {
     id: "select",
@@ -85,20 +131,15 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    meta:{
-      type: any
-    }
   },
   {
     accessorKey: "name",
     header: "Name",
-    meta:{
-      type: string
-    },
+    cell: CustomTableCell,
   },
   {
     accessorKey: "email",
-    //sorting email on a click of a button
+    cell: CustomTableCell,
     header: ({ column }) => {
       return (
         <Button
@@ -114,39 +155,25 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "position",
     header: "Position",
-    meta:{
-      type: string
-    },
+    cell: CustomTableCell,
   },
   {
     accessorKey: "department",
     header: "Dept.",
-    meta:{
-      type: any
-    },
+    cell: CustomTableCell,
   },
   {
     accessorKey: "contact",
     header: "Contact",
-    meta:{
-      type: string
-    }
+    cell: CustomTableCell,
+    meta: {
+      type: string,
+    },
   },
   {
     accessorKey: "salary",
     header: () => <div>Salary</div>,
-    cell: ({ row }) => {
-      const salary = parseFloat(row.getValue("salary"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "GHC",
-      }).format(salary);
-
-      return <div className="text-left font-medium">{formatted}</div>;
-    },
-    meta:{
-      type: string
-    },
+    cell: CustomTableCell,
   },
   {
     accessorKey: "remove",
@@ -166,44 +193,6 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "edit",
     header: () => <div className="text-center">Edit</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center justify-center  text-center font-medium">
-          <PenSquare
-            onClick={(event) => editUser(event,row)}
-            color="gray"
-            className="hover:cursor-pointer hover:scale-105"
-          />
-        </div>
-      );
-    },
+    cell: ({ row, table }) => EditCell({ row, table }),
   },
-  // {
-  //   //go back to ROW actions to add updates
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const payment = row.original;
-
-  //     const handleEditClick = () => {};
-
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
-  //           <DropdownMenuItem onClick={() => deleteUserFromDB("users.id")}>
-  //             Remove Employee
-  //           </DropdownMenuItem>
-  //           <DropdownMenuSeparator />
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
 ];
