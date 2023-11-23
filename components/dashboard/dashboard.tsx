@@ -105,7 +105,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
                   </CardHeader>
                   <CardContent>
                     <RecentSales data={data} />
-                    <NewTable />
+                    <NewTable data ={data}/>
                   </CardContent>
                 </Card>
               </div>
