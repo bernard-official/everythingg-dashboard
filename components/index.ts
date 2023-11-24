@@ -1,3 +1,3 @@
-export * from "./userAuthForm"
+export * from "./user-auth-form"
 export * from "./ui"
-export * from "./userSignupForm"
+export * from "./user-signup-form"

@@ -1,35 +1,33 @@
-import React, {
-  ChangeEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
-import { Student } from "@/types";
+import React, { useEffect, useState } from "react";
 import {
+  ColumnFiltersState,
   Row,
+  SortingState,
+  VisibilityState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
   Button,
+  Input,
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui";
-import { tr } from "date-fns/locale";
-import { ArrowUpDown, PenSquare, Trash2 } from "lucide-react";
+import { ArrowUpDown, Check, PenSquare, Trash2, X } from "lucide-react";
 
 import { deleteUserFromDB, updateUserInDB } from "@/services";
 import { User } from "@/types";
 import toast from "react-hot-toast";
-import { any, string } from "zod";
 
 const editUser = async (user: Row<User>) => {
-  // Convert to Partial User
   const response = await updateUserInDB(user.original);
   if (response.status === 200) {
     toast.success("User updated successfully", { icon: "✅" });
@@ -43,10 +41,7 @@ const editUser = async (user: Row<User>) => {
   }, 2000);
 };
 
-const removeUser = async (
-  event: React.MouseEvent<SVGSVGElement>,
-  user: Row<User>
-) => {
+const removeUser = async (user: Row<User>) => {
   const userId = user.original._id as string;
 
   const response = await deleteUserFromDB(userId);
@@ -62,9 +57,8 @@ const removeUser = async (
   }, 2000);
 };
 
-const TableCell = ({ getValue, row, column, table }) => {
+const SimpleTableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
-  const columnMeta = column.columnDef.meta;
   const tableMeta = table.options.meta;
   const [value, setValue] = useState("");
 
@@ -76,14 +70,9 @@ const TableCell = ({ getValue, row, column, table }) => {
     table.options.meta?.updateData(row.index, column.id, value);
   };
 
-  // const onSelectChange = (e: ChangeEvent) => {
-  //   setValue(e.target.value);
-  //   tableMeta?.updateData(row.index, column.id, e.target.value);
-  // };
-
   if (tableMeta?.editedRows[row.id]) {
     return (
-      <input
+      <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
@@ -93,31 +82,67 @@ const TableCell = ({ getValue, row, column, table }) => {
   }
   return <span>{value}</span>;
 };
+// TODO: refactor
+const SimpleTableCellForSalary = ({ getValue, row, column, table }) => {
+  const initialValue = getValue();
+  const tableMeta = table.options.meta;
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  const onBlur = () => {
+    table.options.meta?.updateData(row.index, column.id, value);
+  };
+
+  if (tableMeta?.editedRows[row.id]) {
+    return (
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={onBlur}
+        type={column.columnDef.meta?.type || "text"}
+      />
+    );
+  }
+  const salary = row.getValue("salary");
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "GHC",
+  }).format(salary);
+
+  return <div className="text-left font-medium">{formatted}</div>;
+};
 
 const EditCell = ({ row, table }) => {
   const meta = table.options.meta;
-  const editRows = async (e: MouseEvent) => {
+  const editRows = async (
+    event: React.MouseEvent<HTMLButtonElement | SVGSVGElement>
+  ) => {
+    event.preventDefault();
     if (meta.editedRows["0"] === true) {
       await editUser(row);
-      console.log("ok", row.original);
-      console.log("setR", meta.editedRows["0"]);
     }
     meta?.setEditedRows((old: []) => ({
       ...old,
       [row.id]: !old[row.id],
     }));
   };
-  const cancelEdit = () => {
+  const cancelEdit = (
+    event: React.MouseEvent<HTMLButtonElement | SVGSVGElement>
+  ) => {
+    event.preventDefault();
     meta?.setEditedRows((old: []) => ({
       ...old,
       [row.id]: false,
     }));
   };
   return meta?.editedRows[row.id] ? (
-    <>
-      <button onClick={cancelEdit}>X</button>{" "}
-      <button onClick={editRows}>✔</button>
-    </>
+    <span className="flex space-x-5">
+      <X color="gray" onClick={cancelEdit} />
+      <Check color="gray" onClick={editRows} />
+    </span>
   ) : (
     <PenSquare
       onClick={editRows}
@@ -127,32 +152,12 @@ const EditCell = ({ row, table }) => {
   );
 };
 
-// const removeUser = async (
-//   event: React.MouseEvent<SVGSVGElement>,
-//   user: Row<User>
-// ) => {
-//   const userId = user.original._id as string;
-
-//   const response = await deleteUserFromDB(userId);
-//   if (response.status === 200) {
-//     toast.success("User removed successfully", { icon: "🗑️" });
-//   } else if (response.status === 404) {
-//     toast.error("User not found", { icon: "🤔" });
-//   } else {
-//     toast.error("Server error", { icon: "🔥" });
-//   }
-//   setTimeout(() => {
-//     window.location.reload();
-//   }, 2000);
-// };
-
-//const columnHelper = createColumnHelper<Student>();
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
   columnHelper.accessor("name", {
     header: "Name",
-    cell: TableCell,
+    cell: SimpleTableCell,
     meta: {
       type: "text",
     },
@@ -169,45 +174,37 @@ const columns = [
         </Button>
       );
     },
-    cell: TableCell,
+    cell: SimpleTableCell,
     meta: {
       type: "text",
     },
   }),
   columnHelper.accessor("position", {
     header: "Position",
-    cell: TableCell,
+    cell: SimpleTableCell,
     meta: {
       type: "text",
     },
   }),
   columnHelper.accessor("department", {
     header: "Department",
-    cell: TableCell,
+    cell: SimpleTableCell,
     meta: {
       type: "text",
     },
   }),
   columnHelper.accessor("contact", {
     header: "Contact",
-    cell: TableCell,
+    cell: SimpleTableCell,
     meta: {
       type: "text",
     },
   }),
   columnHelper.accessor("salary", {
     header: "Salary",
-    cell: ({ row }) => {
-      const salary = parseFloat(row.getValue("salary"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "GHC",
-      }).format(salary);
-
-      return <div className="text-left font-medium">{formatted}</div>;
-    },
+    cell: SimpleTableCellForSalary,
     meta: {
-      type: string,
+      type: "number",
     },
   }),
   columnHelper.display({
@@ -220,7 +217,7 @@ const columns = [
       return (
         <div className="flex items-center justify-center  text-center font-medium">
           <Trash2
-            onClick={(event) => removeUser(event, row)}
+            onClick={(event) => removeUser(row)}
             color="red"
             className="hover:cursor-pointer hover:scale-105"
           />
@@ -235,6 +232,10 @@ const NewTable = () => {
   const [editedRows, setEditedRows] = useState({});
   let [data, setData] = useState<User[]>([]);
   const [originalData, setOriginalData] = useState<User[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
     let value: User[] = [];
@@ -254,6 +255,18 @@ const NewTable = () => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     meta: {
       editedRows,
       setEditedRows,
@@ -287,36 +300,49 @@ const NewTable = () => {
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter emails..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("email")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

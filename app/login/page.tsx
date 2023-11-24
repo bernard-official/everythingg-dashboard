@@ -1,5 +1,5 @@
 "use client";
-import UserAuthForm from "@/components/userAuthForm";
+import UserAuthForm from "@/components/user-auth-form";
 import CustomForm from "@/components/customForm";
 
 const Page = () => {

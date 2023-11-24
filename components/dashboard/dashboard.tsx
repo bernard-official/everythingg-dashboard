@@ -1,39 +1,20 @@
-"use client";
 import { Metadata } from "next";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "./date-range-picker";
-import { MainNav } from "./main-nav";
-import { Overview } from "./overview";
-import { RecentSales } from "./recent-sales";
 import { Search } from "./search";
 import { UserNav } from "./user-nav";
-import { allUsers } from "@/consts";
-import { useGlobalContext } from "@/context/store";
-import { useEffect } from "react";
-import { getDataFromDB } from "@/services";
-import {  User } from "@/types";
-import UserSignupForm from "../userSignupForm";
-import NewTable from "./newtable";
+import { User } from "@/types";
+import UserSignupForm from "../user-signup-form";
+import NewTable from "../new-table";
 
-// export const metadata: Metadata = {
-//   title: "Dashboard",
-//   description: "Example dashboard app built using the components.",
-// };
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Example dashboard app built using the components.",
+};
 
 export default function DashboardPage({ data }: { data: User[] }) {
-  const { users, setUsers } = useGlobalContext();
-
-  // console.log("hmmm: ", users);
   return (
     <>
       <div className="md:hidden">
@@ -68,7 +49,6 @@ export default function DashboardPage({ data }: { data: User[] }) {
           <Tabs defaultValue="overview" className="space-y-2">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              {/* <TabsTrigger value="UserSignupForm">User Signup</TabsTrigger>  */}
               <TabsTrigger value="UserSignupForm">Employee Signup</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
@@ -104,8 +84,7 @@ export default function DashboardPage({ data }: { data: User[] }) {
                     <CardTitle>Company Employees</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales data={data} />
-                    <NewTable/>
+                    <NewTable />
                   </CardContent>
                 </Card>
               </div>
